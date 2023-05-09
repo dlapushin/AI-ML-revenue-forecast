@@ -1,5 +1,15 @@
 ### Train 5 standard modeltime models on time-series dataframe "train"
 
+library(modeltime)
+library(tidyverse)
+library(xgboost)
+library(tidymodels)
+library(lubridate)
+library(timetk)
+library(ggplot2)
+library(parsnip)
+library(tsfeatures)
+
 # Model 1: auto_arima ----
 model_fit_arima_no_boost <- arima_reg() %>%
   set_engine(engine = "auto_arima") %>%
