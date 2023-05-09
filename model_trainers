@@ -1,0 +1,33 @@
+### Set up 5 standard modeltime models
+
+# Model 1: auto_arima ----
+model_fit_arima_no_boost <- arima_reg() %>%
+  set_engine(engine = "auto_arima") %>%
+  fit(revenue ~ week, data = train)
+
+# Model 2: arima_boost ----
+model_fit_arima_boosted <- arima_boost(
+  min_n = 2,
+  learn_rate = 0.015
+) %>%
+  set_engine(engine = "auto_arima_xgboost") %>%
+  fit(revenue ~ week + as.numeric(week) + factor(month(week, label=TRUE), 
+      ordered=F), 
+  data = train)
+
+# Model 3: ets ----
+model_fit_ets <- exp_smoothing() %>%
+  set_engine(engine = "ets") %>%
+  fit(revenue ~ week, data = train)
+#> frequency = 12 observations per 1 year
+
+# Model 4: prophet ----
+model_fit_prophet <- prophet_reg(seasonality_yearly=TRUE, seasonality_weekly=TRUE) %>%
+  set_engine(engine = "prophet") %>%
+  fit(revenue ~ week, data = train)
+
+# Model 5: lm ----
+model_fit_lm <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(revenue ~ as.numeric(week) + factor(month(week, label = TRUE), ordered = FALSE),
+      data = train)
