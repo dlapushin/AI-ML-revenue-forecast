@@ -1,4 +1,4 @@
-### Set up 5 standard modeltime models
+### Train 5 standard modeltime models on time-series dataframe "train"
 
 # Model 1: auto_arima ----
 model_fit_arima_no_boost <- arima_reg() %>%
@@ -31,3 +31,35 @@ model_fit_lm <- linear_reg() %>%
   set_engine("lm") %>%
   fit(revenue ~ as.numeric(week) + factor(month(week, label = TRUE), ordered = FALSE),
       data = train)
+
+#### Test fitted models to time-series dataframe "test"
+
+set.seed(123)
+models_tbl <- modeltime_table(
+  model_fit_arima_no_boost,
+  model_fit_arima_boosted,
+  model_fit_ets,
+  model_fit_prophet,
+  model_fit_lm
+)
+
+calibration_tbl <- models_tbl %>%
+  modeltime_calibrate(new_data = test)
+
+calibration_tbl %>%
+modeltime_accuracy() %>%
+table_modeltime_accuracy(.interactive = FALSE) 
+
+calibration_tbl %>%
+  modeltime_forecast(
+    new_data    = test,
+    actual_data = actuals,
+    conf_interval = .9  # display a 90% confidence band around each forecast
+  ) %>% 
+  mutate(.conf_lo = ifelse(.conf_lo < 0, 0, .conf_lo)) %>%  # this is purely to avoid a confidence range that dips below zero 
+  plot_modeltime_forecast(
+    .conf_interval_show=TRUE, 
+    .interactive = TRUE,
+    .title = 'Fiscal Year Forecasts'
+  )
+ 
