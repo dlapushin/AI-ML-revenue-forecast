@@ -1,4 +1,4 @@
-### Train 5 standard modeltime models on time-series dataframe "train"
+### Load libraries
 
 library(modeltime)
 library(tidyverse)
@@ -9,6 +9,9 @@ library(timetk)
 library(ggplot2)
 library(parsnip)
 library(tsfeatures)
+
+### Train 5 standard modeltime models on time-series dataframe "train"
+### Display chart of forecast vs. test
 
 # Model 1: auto_arima ----
 model_fit_arima_no_boost <- arima_reg() %>%
@@ -71,5 +74,5 @@ calibration_tbl %>%
     .conf_interval_show=TRUE, 
     .interactive = TRUE,
     .title = 'Fiscal Year Forecasts'
-  )
+  ) -> forecast_vs_test_chart
  
