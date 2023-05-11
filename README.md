@@ -1,5 +1,5 @@
 # AI-ML-revenue-forecast
-A framework for using standard Salesforce reports and data to help drive a state-of-the-art ML-based revenue forecasting model that can provide meaningful forecasts over multiple quarters. All that's needed is a Salesforce report and either R or Python.  An overview of the process is shown below.
+A framework for using standard Salesforce reports and data to help drive a state-of-the-art ML-based revenue forecasting model that can provide meaningful forecasts over multiple quarters. All that's needed is a Salesforce report and either R or Python.  An overview of the process is shown below and full details are discussed in a 3 part series of articles on Medium. (![Medium article] (https://medium.com/@dlapushin/open-source-b2b-sales-forecasting-c1cd7bc9b2a8))
 
 ![Forecast Loop](https://github.com/dlapushin/AI-ML-revenue-forecast/blob/main/sales_forecast_process.png)
 
@@ -12,7 +12,9 @@ The data for training the forecast model can be downloaded from Salesforce simpl
 
 **CreateDate**
 * the date on which the opportunity was created in the CRM (used for reference initially but potentially a model feature as well)
-ACV, ARR, or Amount (in base currency e.g. $US) the annualized contact value (ACV) of the sale; for multi-year licenses, this would be a per-annum amount
+
+**ACV, ARR, or Amount (in base currency e.g. $US)** 
+* the annualized contact value (ACV) of the sale; for multi-year licenses, this would be a per-annum amount
 
 **CloseDate**
 * (YYYY-MM-DD) the calendar date on which the opportunity was closed
@@ -34,14 +36,22 @@ There are a 3 data transformations needed at this point. R makes this quite stra
 
 **Transformation #3**: Split the data into training and testing components. A reasonable rule of thumb is to use the first 65%-80% of the revenue history for model training, and leave the rest for testing/validation. For example, with a 3 year opportunity history, the first 2 would be used for training and the most recent used for testing/validation.
 
-The R code assumes you have the opportunity file in R’s working directory, and is named “my opportunities.csv”. You can simply make a copy of this function — oppty_file_transform() — and run it in R by providing the 4 required parameters (e.g. oppty_file_transform(“my_opportunities.csv”, “ARR_Amount__c”, 1, test_data_start_date = “2022–01–01”)
+The R code assumes you have the opportunity file in R’s working directory, and is named “my opportunities.csv”. You can simply make a copy of this function — oppty_file_transform() — and run it in R by providing the 4 required parameters (e.g. *oppty_file_transform(“my_opportunities.csv”, “ARR_Amount__c”, 1, test_data_start_date = “2022–01–01”)*
 
 * filename (e.g. “my_opportunities.csv”)
 * name of the amount field (e.g. “ARR_Amount__c”)
 * the number of the month starting the fiscal year (e.g. “1” for Jan, “2” for Feb, etc.)
 * the calendar date that marks beginning of test data (e.g. “2022–01–01”)
 
-Running this function successfully will result in 3 dataframes: df_revenue_ts, train, and test plus a formatted chart tsplot_train_test showing the weekly series broken out by train and test. Because they’re created inside the function using global scope definition(<<-), they can all be viewed after calling the oppty_file_transform() function.
+Running this function successfully will create 3 dataframes and 1 plot: 
+* df_revenue_ts
+* train
+* test 
+* a chart tsplot_train_test showing the weekly series broken out by train and test
+
+Because they’re created inside the function using global scope definition(<<-), they can all be viewed after calling the oppty_file_transform() function.
+
+
 
 
 
