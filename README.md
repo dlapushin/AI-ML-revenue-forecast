@@ -1,9 +1,38 @@
 # AI-ML-revenue-forecast
-A framework for using standard Salesforce reports and data to help drive a state-of-the-art ML-based revenue forecasting model that can provide meaningful forecasts over multiple quarters. All that's needed is a Salesforce report and either R or Python.  An overview of the process is shown below and full details are discussed in a 3 part series of articles on Medium. [Medium article](https://medium.com/@dlapushin/open-source-b2b-sales-forecasting-c1cd7bc9b2a8)
+
+## Summary
+A framework for using standard Salesforce reports and data to help drive a state-of-the-art ML-based revenue forecasting model that can provide meaningful forecasts over multiple fiscal quarters. All that's needed is a Salesforce report and either R or Python.  An overview of the process is shown below and full details are discussed in a 3 part series of articles on Medium. [Medium article](https://medium.com/@dlapushin/open-source-b2b-sales-forecasting-c1cd7bc9b2a8)
+
+## Environment Setup
+By far the easiest way to follow this tutorial and try out the code is to pull the Github repo into RStudio using the following steps.
+1. Create a new project under File menu:
+
+![step1](https://github.com/dlapushin/AI-ML-revenue-forecast/blob/main/pic1/step1.png)
+
+2. Choose to create using Version Control:
+
+![step2](https://github.com/dlapushin/AI-ML-revenue-forecast/blob/main/pic1/step2.png)
+
+3. Select Git:
+
+![step3](https://github.com/dlapushin/AI-ML-revenue-forecast/blob/main/pic1/step3.png)
+
+4. Enter https://github.com/dlapushin/AI-ML-revenue-forecast/ in the Repository URL and leave the rest as is.  Click 'Create Project'.
+
+![step4](https://github.com/dlapushin/AI-ML-revenue-forecast/blob/main/pic1/step4.png)
+
+5. The code files should load at this point and you will see a copy of the repo folder in RStudio.  The folder **R_code** will contain file with all needed R functions.
+
+![step5](https://github.com/dlapushin/AI-ML-revenue-forecast/blob/main/pic1/step5.png)
+
+
+## Overview of Revenue Forecast Process
 
 ![Forecast Loop](https://github.com/dlapushin/AI-ML-revenue-forecast/blob/main/sales_forecast_process.png)
 
-## Step 1: Use Salesforce (or other CRM) to download opportunity data
+## Process Steps
+
+### Step 1: Use Salesforce (or other CRM) to download opportunity data
 
 The data for training the forecast model can be downloaded from Salesforce simply by creating an Opportunity level report for the past 2–3 years at a minimum. The key fields to include in the report would be:
 
@@ -27,7 +56,7 @@ The data for training the forecast model can be downloaded from Salesforce simpl
 
 Export this data as a .csv file (e.g. my_opportunities.csv)
 
-## Step 2: Data Preparation
+### Step 2: Data Preparation
 There are a 3 data transformations needed at this point. R makes this quite straightforward and the code is provided below as well.
 
 **Transformation #1**: Create a weekly time series from the ingested opportunity level data. We choose weekly because using 2 to 3 years of historical quarterly revenue levels would yield at most a dozen observations — not nearly enough data for a meaningful model. By the same token, trying to model daily sales levels would introduce substantial noise. A happy medium is to create a weekly time-series which is what we’ll use throughout these discussions.
