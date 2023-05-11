@@ -19,13 +19,13 @@ ts_metrics <- function(ts) {
   metrics <- append(metrics, tsfeatures::lumpiness(ts))
   return(metrics)
 }
-
 ts_metrics(df_revenue_ts$revenue) 
 
-actuals <- rbind(train, test)
 
 ### Train 5 standard modeltime models on time-series dataframe "train"
 ### Display chart of forecast vs. test
+
+actuals <- rbind(train, test)
 
 # Model 1: auto_arima ----
 model_fit_arima_no_boost <- arima_reg() %>%
