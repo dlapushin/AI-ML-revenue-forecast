@@ -10,6 +10,18 @@ library(ggplot2)
 library(parsnip)
 library(tsfeatures)
 
+### Time series diagnostics
+## function to combine 3 features (entropy, stability, and lumpiness) into one list
+ts_metrics <- function(ts) {
+  metrics <- list()
+  metrics <- append(metrics, tsfeatures::entropy(ts))
+  metrics <- append(metrics, tsfeatures::stability(ts))
+  metrics <- append(metrics, tsfeatures::lumpiness(ts))
+  return(metrics)
+}
+
+ts_metrics(df_revenue_ts$revenue) 
+
 ### Train 5 standard modeltime models on time-series dataframe "train"
 ### Display chart of forecast vs. test
 
