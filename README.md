@@ -9,13 +9,17 @@ The data for training the forecast model can be downloaded from Salesforce simpl
 
 **Opportunity ID**
 * an alpha-numeric code unique to every opportunity
+
 **CreateDate**
 * the date on which the opportunity was created in the CRM (used for reference initially but potentially a model feature as well)
 ACV, ARR, or Amount (in base currency e.g. $US) the annualized contact value (ACV) of the sale; for multi-year licenses, this would be a per-annum amount
+
 **CloseDate**
 * (YYYY-MM-DD) the calendar date on which the opportunity was closed
+
 **IsClosed**
 * (True/False) a flag field indicating that an opportunity was in fact closed and no longer being actively worked on by Sales
+
 **IsWon**
 * (True/False) a flag field indicating that an opportunity was in fact won and a sale was made; should only be True if ‘IsClosed’ = True
 
