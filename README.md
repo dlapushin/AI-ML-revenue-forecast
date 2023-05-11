@@ -57,7 +57,7 @@ The data for training the forecast model can be downloaded from Salesforce simpl
 Export this data as a .csv file (e.g. my_opportunities.csv)
 
 ### Step 2: Data Preparation
-There are a 3 data transformations needed at this point, all are included in the R code file - **oppty_file_transform.R** - which you can load directly by running the following in command in the RStudio console: 
+There are a 3 data transformations needed at this point, all are included in the R code file - **oppty_file_transform.R** - which you can load directly by running the below command in the RStudio console: 
 
 > source("~/AI-ML-revenue-forecast/R_code/oppty_file_transform.R", echo=TRUE)
 
@@ -86,7 +86,27 @@ Running this function successfully will create 3 dataframes and 1 plot:
 
 Because they’re created inside the R function using global scope definition(<<-), they can all be viewed after calling the oppty_file_transform() function.
 
+### Step 3: Data diagnostics / Model evaluation
 
+> A quick sidebar — time series can sometimes behave so erratically that they are not amenable to prediction, at least on their own. As mentioned, there are some simple metrics we can run as a “pre-flight check”. This provides an early indication of whether an accurate statistical forecast model is even possible.
 
+Three of these metrics are the *entropy, stability, and lumpiness scores* which help measure the stationarity of a series. This simply refers to whether the time-series appear to follow a consistent distribution, i.e. with a stable average and stable range of variation around the average. So these metrics give an indication of how predictable the revenue series is, before we even start model testing. 
+
+For example, if historical revenue shows high entropy and low stability, we should expect that 1) simple forecast models based just on this history will most likely be inaccurate, and 2) we should consider testing and tuning deep-learning style models or adding other appropriate variables that may contribute some predictive power (say, a leading indicator of revenue such as Marketing pipeline).
+
+1. Fit a range of candidate models to the train data:
+
+- ARIMA
+- Exponential Smoothed (ETS)
+- Linear with Time Features
+- Prophet
+
+2. For each fitted model, create a forecast for the test data period. We can use the modeltime_forecast function to do this and aggregate the resulting forecast levels into quarterly groupings.
+
+3. Similarly, aggregate the test data into quarterly totals (e.g. Q1, Q2, Q3, and Q4 ) by grouping on the fiscal_quarter field.
+
+4. For each model, we measure the difference between the forecasted quarterly revenue (#2 above) vs. actual quarterly revenue (#3 above) and record their percent difference by quarter.
+
+5. Comparing an average absolute error calculation for each model tells us which model offered the best overall quarterly predictions. Decide which model is optimal based on these metrics.
 
 
