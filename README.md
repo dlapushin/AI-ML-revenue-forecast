@@ -26,11 +26,11 @@ By far the easiest way to follow this tutorial and try out the code is to pull t
 ![step5](https://github.com/dlapushin/AI-ML-revenue-forecast/blob/main/pic1/step5.png)
 
 
-## Overview of Revenue Forecast Process
+## Overview of Process and Process Steps
 
 ![Forecast Loop](https://github.com/dlapushin/AI-ML-revenue-forecast/blob/main/sales_forecast_process.png)
 
-## Process Steps
+Each of the numbered steps is explained and detailed below.
 
 ### Step 1: Use Salesforce (or other CRM) to download opportunity data
 
@@ -57,7 +57,9 @@ The data for training the forecast model can be downloaded from Salesforce simpl
 Export this data as a .csv file (e.g. my_opportunities.csv)
 
 ### Step 2: Data Preparation
-There are a 3 data transformations needed at this point. R makes this quite straightforward and the code is provided below as well.
+There are a 3 data transformations needed at this point, all are included in the R code file - **oppty_file_transform.R** - which you can load directly by running the following in command in the RStudio console: 
+
+> source("~/AI-ML-revenue-forecast/R_code/oppty_file_transform.R", echo=TRUE)
 
 **Transformation #1**: Create a weekly time series from the ingested opportunity level data. We choose weekly because using 2 to 3 years of historical quarterly revenue levels would yield at most a dozen observations — not nearly enough data for a meaningful model. By the same token, trying to model daily sales levels would introduce substantial noise. A happy medium is to create a weekly time-series which is what we’ll use throughout these discussions.
 
@@ -65,8 +67,11 @@ There are a 3 data transformations needed at this point. R makes this quite stra
 
 **Transformation #3**: Split the data into training and testing components. A reasonable rule of thumb is to use the first 65%-80% of the revenue history for model training, and leave the rest for testing/validation. For example, with a 3 year opportunity history, the first 2 would be used for training and the most recent used for testing/validation.
 
-The R code assumes you have the opportunity file in R’s working directory, and is named “my opportunities.csv”. You can simply make a copy of this function — oppty_file_transform() — and run it in R by providing the 4 required parameters.
-For example, *oppty_file_transform(“my_opportunities.csv”, “ARR_Amount__c”, 1, test_data_start_date = “2022–01–01”)*
+The R code assumes you have the opportunity .csv file in R’s working directory. You can then apply this function to your opportunity export file, e.g. my_opportunities.csv, for example, 
+
+> oppty_file_transform(“my_opportunities.csv”, “ARR_Amount__c”, 1, test_data_start_date = “2022–01–01”)
+
+where:
 
 * filename (e.g. “my_opportunities.csv”)
 * name of the amount field (e.g. “ARR_Amount__c”)
