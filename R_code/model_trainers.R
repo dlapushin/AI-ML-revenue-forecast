@@ -22,6 +22,8 @@ ts_metrics <- function(ts) {
 
 ts_metrics(df_revenue_ts$revenue) 
 
+actuals <- rbind(train, test)
+
 ### Train 5 standard modeltime models on time-series dataframe "train"
 ### Display chart of forecast vs. test
 
@@ -87,4 +89,5 @@ calibration_tbl %>%
     .interactive = TRUE,
     .title = 'Fiscal Year Forecasts'
   ) -> forecast_vs_test_chart
- 
+
+forecast_vs_test_chart
