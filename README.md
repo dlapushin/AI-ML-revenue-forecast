@@ -94,16 +94,22 @@ Three of these metrics are the *entropy, stability, and lumpiness scores* which 
 
 For example, if historical revenue shows high entropy and low stability, we should expect that 1) simple forecast models based just on this history will most likely be inaccurate, and 2) we should consider testing and tuning deep-learning style models or adding other appropriate variables that may contribute some predictive power (say, a leading indicator of revenue such as Marketing pipeline).
 
-1. Fit a range of candidate models to the train data:
+Fitting the models to the data and evaluating the results can be achived by simply running the **model_trainers.R** code as shown.
 
-- ARIMA
+> source("~/AI-ML-revenue-forecast/R_code/model_trainers.R", echo=TRUE)
+
+The code automatically performs the following.
+
+1. Fit a range of candidate models to the **train** data:
+
+- ARIMA + ARIMA w. XGBoost
 - Exponential Smoothed (ETS)
 - Linear with Time Features
 - Prophet
 
-2. For each fitted model, create a forecast for the test data period. We can use the modeltime_forecast function to do this and aggregate the resulting forecast levels into quarterly groupings.
+2. For each fitted model, create a forecast for the **test** data period. The *modeltime_forecast* function is used to do this and the resulting forecast levels are aggregated into quarterly groupings.
 
-3. Similarly, aggregate the test data into quarterly totals (e.g. Q1, Q2, Q3, and Q4 ) by grouping on the fiscal_quarter field.
+3. Similarly, aggregate the **test** data into quarterly totals (e.g. Q1, Q2, Q3, and Q4 ) by grouping on the fiscal_quarter field.
 
 4. For each model, we measure the difference between the forecasted quarterly revenue (#2 above) vs. actual quarterly revenue (#3 above) and record their percent difference by quarter.
 
