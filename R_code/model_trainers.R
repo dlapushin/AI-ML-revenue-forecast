@@ -46,7 +46,6 @@ model_fit_arima_boosted <- arima_boost(
 model_fit_ets <- exp_smoothing() %>%
   set_engine(engine = "ets") %>%
   fit(revenue ~ week, data = train)
-#> frequency = 12 observations per 1 year
 
 # Model 4: prophet ----
 model_fit_prophet <- prophet_reg(seasonality_yearly=TRUE, seasonality_weekly=TRUE) %>%
@@ -70,24 +69,24 @@ models_tbl <- modeltime_table(
   model_fit_lm
 )
 
-calibration_tbl <- models_tbl %>%
-  modeltime_calibrate(new_data = test)
-
-calibration_tbl %>%
-modeltime_accuracy() %>%
-table_modeltime_accuracy(.interactive = FALSE) 
-
-calibration_tbl %>%
+## Generate an interactive time series graph with out of sample forecasts on test data periods
+forecast_vs_test_chart <- models_tbl %>%
+  modeltime_calibrate(new_data=test) %>%
   modeltime_forecast(
     new_data    = test,
     actual_data = actuals,
-    conf_interval = .9  # display a 90% confidence band around each forecast
+    conf_interval = .9
   ) %>% 
-  mutate(.conf_lo = ifelse(.conf_lo < 0, 0, .conf_lo)) %>%  # this is purely to avoid a confidence range that dips below zero 
+  mutate(.conf_lo = ifelse(.conf_lo < 0, 0, .conf_lo)) %>%
   plot_modeltime_forecast(
     .conf_interval_show=TRUE, 
     .interactive = TRUE,
-    .title = 'Fiscal Year Forecasts'
-  ) -> forecast_vs_test_chart
+    .title = 'Fiscal Year Forecasts') 
 
+## Generate goodness-of-fit metrics for all forecast models
+accuracy_tbl <- calibration_tbl %>%
+  modeltime_accuracy()
+  
 forecast_vs_test_chart
+accuracy_tbl
+
