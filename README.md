@@ -115,4 +115,8 @@ The code automatically performs the following.
 
 5. Comparing an average absolute error calculation for each model tells us which model offered the best overall quarterly predictions. Decide which model is optimal based on these metrics.
 
+An interactive time-series forecast plots and goodness-of-fit metrics can be viewed by running the following in RStudio:
 
+> forecast_vs_test_chart
+
+> accuracy_tbl
